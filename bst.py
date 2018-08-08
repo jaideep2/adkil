@@ -78,45 +78,82 @@ class bst:
     def findMax(self, root):
         pass
 
-    def findHeight(self, root):
-        pass
+    def findHeight(self, node):
+        if node is None:
+            return -1
+        return max(self.findHeight(node.left),self.findHeight(node.right))+1
+
+    def printLevelOrder(self):
+        #Find height/Max Depth
+        h = self.findHeight(self.root)
+        #Iterate through all levels
+        for level in range(h+1):
+            self.printCurrentLevel(self.root,level)
+
+    def printCurrentLevel(self, node, level):
+        if node is None:
+            return
+        if level==0:
+            print(node.data)
+        elif level>0:
+            self.printCurrentLevel(node.left,level-1)
+            self.printCurrentLevel(node.right,level-1)
 
     def bfs(self):
         #TODO ask arjun aboot this
+        out = []
         if not self.root:
-            print('None')
+            return out
         else:
             current_level = [self.root]
             while current_level:
-                print(' '.join(str(n) for n in current_level))
+                out.append([n.data for n in current_level])
                 next_level = list()
                 for current in current_level:
                     if current.left:
                         next_level.append(current.left)
                     if current.right:
                         next_level.append(current.right)
-                    #print('>>',' '.join(str(n) for n in current_level),'|',' '.join(str(n) for n in next_level))
+                    print('>>',' '.join(str(n) for n in current_level),'|',' '.join(str(n) for n in next_level))
                     current_level = next_level
+            return out
 
-    def dfs(self, root):
+    def isLeaf(self, node):
+        if node:
+            if not node.left and not node.right:
+                return True
+        return False
+
+    def printLeaves(self, node=None):
+        if node is None: node = self.root
+        if node.left: self.printLeaves(node.left)
+        if node.right:self.printLeaves(node.right)
+        if self.isLeaf(node):
+            print(node.data)
+
+    def dfs(self, node=None): #postorder
+        if node is None: node = self.root
+        if node.left: self.dfs(node.left)
+        if node.right:self.dfs(node.right)
+        print(node.data)
+
+    def isBST(self):
         pass
 
-    def isBST(self, root):
-        pass
-
-    def getSuccessor(self, root):
+    def getSuccessor(self, node):
         pass
 
 
 def test():
-    b = bst(10)
-    b.insert(5)
-    b.insert(15)
+    b = bst(5)
     b.insert(2)
+    b.insert(7)
+    b.insert(1)
+    b.insert(3)
+    b.insert(6)
     b.insert(8)
-    b.insert(11)
-    b.insert(30)
-    b.bfs()
+    b.printLeaves()
+    #b.printLevelOrder()
 
 if __name__ == '__main__':
     test()
